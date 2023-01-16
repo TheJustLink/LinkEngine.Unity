@@ -10,7 +10,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "GameProject.dll"
+        "LinkEngine.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],
