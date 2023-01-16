@@ -1,8 +1,8 @@
 ﻿using Assets.Scripts.Extensions;
 
-using GameProject;
-
 using UnityEngine;
+
+using LinkEngine.Components;
 
 using Quaternion = System.Numerics.Quaternion;
 using Vector2 = System.Numerics.Vector2;

@@ -1,6 +1,10 @@
 ﻿using System.Numerics;
 
-using GameProject;
+using LinkEngine.Engines;
+using LinkEngine.IO;
+using LinkEngine.Logs;
+using LinkEngine.Assets;
+using LinkEngine.GameObjects;
 
 namespace Assets.Scripts
 {

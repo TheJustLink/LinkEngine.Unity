@@ -1,6 +1,6 @@
-﻿using GameProject;
+﻿using UnityEngine;
 
-using UnityEngine;
+using LinkEngine.Assets;
 
 namespace Assets.Scripts
 {

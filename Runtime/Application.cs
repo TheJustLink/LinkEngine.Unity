@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     static class Application
     {
-        private static GameProject.Application s_application;
+        private static LinkEngine.Application s_application;
         private static Thread s_appThread;
 
         [RuntimeInitializeOnLoadMethod]
@@ -25,11 +25,11 @@ namespace Assets.Scripts
             Debug.Log("Started");
         }
 
-        private static void StartApplication(GameProject.IEngine engine)
+        private static void StartApplication(LinkEngine.Engines.IEngine engine)
         {
             s_appThread = new(() =>
             {
-                s_application = new GameProject.Application(engine);
+                s_application = new LinkEngine.Application(engine);
                 s_application.Start();
             });
             s_appThread.IsBackground = true;

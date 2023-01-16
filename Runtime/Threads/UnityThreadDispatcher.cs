@@ -94,15 +94,22 @@ namespace Assets.Scripts
 
         private void Update()
         {
+            UpdateTasks();
+            UpdateSynchronizationJobs();
+        }
+        private void UpdateSynchronizationJobs()
+        {
+            if (_synchronizationJobs.Count == 0) return;
+            
+            for (var i = 0; i < _synchronizationJobs.Count; i++)
+                _synchronizationJobs[i]();
+        }
+        private void UpdateTasks()
+        {
             if (_updateTasks.IsEmpty) return;
             
             while (_updateTasks.TryDequeue(out var task))
                 task.RunSynchronously();
-
-            if (_synchronizationJobs.Count == 0) return;
-
-            for (var i = 0; i < _synchronizationJobs.Count; i++)
-                _synchronizationJobs[i]();
         }
     }
 }

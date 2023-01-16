@@ -6,7 +6,7 @@ using UnityEngine;
 
 using Assets.Scripts.Extensions;
 
-using GameProject;
+using LinkEngine.Assets;
 
 namespace Assets.Scripts
 {

@@ -1,4 +1,4 @@
-﻿using GameProject;
+﻿using LinkEngine.Logs;
 
 namespace Assets.Scripts
 {

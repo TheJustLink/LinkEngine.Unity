@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-using GameProject;
-
 using UnityEngine;
+
+using LinkEngine.GameObjects;
 
 namespace Assets.Scripts
 {
