@@ -2,7 +2,15 @@
 
 using UnityEngine;
 
-namespace Assets.Scripts
+using LinkEngine.Unity.Engines;
+using LinkEngine.Unity.Threads;
+using LinkEngine.Unity.GameObjects;
+using LinkEngine.Unity.Assets;
+
+using Input = LinkEngine.Unity.IO.Input;
+using Logger = LinkEngine.Unity.Logs.Logger;
+
+namespace LinkEngine.Unity
 {
     static class Application
     {
@@ -16,7 +24,7 @@ namespace Assets.Scripts
             _ = UnityThreadDispatcher.Instance;
 
             Debug.Log("Starting");
-
+            
             var logger = new Logger();
             var objectFactory = new GameObjectFactory();
             var engine = new Engine(logger, objectFactory, new Input(), new AssetProvider());

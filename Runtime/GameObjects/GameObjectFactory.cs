@@ -3,8 +3,9 @@
 using UnityEngine;
 
 using LinkEngine.GameObjects;
+using LinkEngine.Unity.Threads;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.GameObjects
 {
     class GameObjectFactory : IGameObjectFactory
     {

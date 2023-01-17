@@ -1,6 +1,6 @@
 ﻿using LinkEngine.Logs;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.Logs
 {
     class Logger : ILogger
     {

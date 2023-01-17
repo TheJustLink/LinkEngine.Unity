@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Object = UnityEngine.Object;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.Assets
 {
     class AssetWrapper
     {

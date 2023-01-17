@@ -2,7 +2,7 @@
 
 using LinkEngine.Assets;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.Assets
 {
     class SpriteWrapper : AssetWrapper<Sprite>, ISprite
     {

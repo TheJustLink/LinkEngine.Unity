@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using UnityEngine;
 
-using Assets.Scripts.Extensions;
-
 using LinkEngine.Assets;
+using LinkEngine.Unity.Extensions;
+using LinkEngine.Unity.Threads;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.Assets
 {
     class AssetProvider : IAssetProvider
     {

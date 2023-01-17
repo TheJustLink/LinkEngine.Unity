@@ -1,14 +1,14 @@
-﻿using Assets.Scripts.Extensions;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using LinkEngine.Components;
+using LinkEngine.Unity.Extensions;
+using LinkEngine.Unity.Threads;
 
 using Quaternion = System.Numerics.Quaternion;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.Components
 {
     class TransformWrapper : ITransform
     {

@@ -2,8 +2,9 @@
 
 using LinkEngine.Components;
 using LinkEngine.GameObjects;
+using LinkEngine.Unity.Components;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.GameObjects
 {
     class GameObjectWrapper : IGameObject
     {

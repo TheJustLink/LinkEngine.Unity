@@ -1,8 +1,9 @@
 ﻿using System.Numerics;
 
 using LinkEngine.IO;
+using LinkEngine.Unity.Threads;
 
-namespace Assets.Scripts
+namespace LinkEngine.Unity.IO
 {
     class Input : IInput<Vector2>
     {

@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Extensions
+﻿namespace LinkEngine.Unity.Extensions
 {
     static class FloatExtensions
     {
