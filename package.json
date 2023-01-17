@@ -7,16 +7,19 @@
   "documentationUrl": "https://github.com/TheJustLink/LinkEngineUnity",
   "changelogUrl": "https://github.com/TheJustLink/LinkEngineUnity/commits/main",
   "licensesUrl": "https://raw.githubusercontent.com/TheJustLink/LinkEngineUnity/main/LICENSE?token=GHSAT0AAAAAABPZF4ZDSC2KZ2ATCOBZKKKMY6FGDGA",
- "keywords": [
+  "keywords": [
     "engine",
     "link",
     "wrapper",
-	"devlinkgames",
-	"sdk"
+    "devlinkgames",
+    "sdk"
   ],
   "author": {
     "name": "Link",
     "email": "devlinkgames@gmail.com",
     "url": "https://github.com/TheJustLink"
+  },
+  "dependencies": {
+    "com.devlinkgames.linkengine.core": "0.0.2"
   }
 }
