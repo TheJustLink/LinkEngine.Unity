@@ -12,34 +12,33 @@ using Logger = LinkEngine.Unity.Logs.Logger;
 
 namespace LinkEngine.Unity
 {
-    static class Application
+    static class UnityApplication
     {
-        private static LinkEngine.Application s_application;
         private static Thread s_appThread;
-
+        private static Engine s_engine;
+        
         [RuntimeInitializeOnLoadMethod]
         public static void Main()
         {
-            UnityEngine.Application.quitting += OnStop;
+            Application.quitting += OnStop;
             _ = UnityThreadDispatcher.Instance;
 
             Debug.Log("Starting");
-            
-            var logger = new Logger();
-            var objectFactory = new GameObjectFactory();
-            var engine = new Engine(logger, objectFactory, new Input(), new AssetProvider());
 
-            StartApplication(engine);
+            s_engine = new Engine(
+                new Logger(),
+                new GameObjectFactory(),
+                new Input(),
+                new AssetProvider()
+            );
+
+            StartApplication(s_engine);
             Debug.Log("Started");
         }
 
         private static void StartApplication(LinkEngine.Engines.IEngine engine)
         {
-            s_appThread = new(() =>
-            {
-                s_application = new LinkEngine.Application(engine);
-                s_application.Start();
-            });
+            s_appThread = new(() => LinkEngine.EntryPoint.Enter(engine));
             s_appThread.IsBackground = true;
             s_appThread.Start();
         }
@@ -54,8 +53,8 @@ namespace LinkEngine.Unity
 
                 Debug.LogError("Application initialize thread aborted");
             }
-
-            s_application?.Stop();
+            
+            s_engine?.Stop();
         }
     }
 }

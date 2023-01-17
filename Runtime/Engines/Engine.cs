@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 using LinkEngine.Assets;
 using LinkEngine.Engines;
@@ -10,6 +11,8 @@ namespace LinkEngine.Unity.Engines
 {
     class Engine : IEngine
     {
+        public event Action Stopped;
+        
         public ILogger Logger { get; }
         public IInput<Vector2> Input { get; }
         public IGameObjectFactory GameObjectFactory { get; }
@@ -22,5 +25,7 @@ namespace LinkEngine.Unity.Engines
             Input = input;
             AssetProvider = assetProvider;
         }
+
+        public void Stop() => Stopped?.Invoke();
     }
 }
