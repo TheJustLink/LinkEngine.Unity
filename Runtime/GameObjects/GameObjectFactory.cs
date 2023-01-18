@@ -13,13 +13,13 @@ namespace LinkEngine.Unity.GameObjects
         {
             var gameObject = new GameObject();
 
-            return (IGameObject)new GameObjectWrapper(gameObject);
+            return new GameObjectWrapper(gameObject) as IGameObject;
         });
         public Task<IGameObject> CreateAsync() => UnityThreadDispatcher.Instance.InvokeAsync(() =>
         {
             var gameObject = new GameObject();
 
-            return (IGameObject)new GameObjectWrapper(gameObject);
+            return new GameObjectWrapper(gameObject) as IGameObject;
         });
     }
 }

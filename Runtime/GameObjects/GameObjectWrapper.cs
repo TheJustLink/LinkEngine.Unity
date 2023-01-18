@@ -8,7 +8,7 @@ namespace LinkEngine.Unity.GameObjects
 {
     class GameObjectWrapper : IGameObject
     {
-        public ITransform Transform { get; }
+        public IComponentContainer Components { get; }
 
         private readonly GameObject _gameObject;
 
@@ -16,7 +16,7 @@ namespace LinkEngine.Unity.GameObjects
         {
             _gameObject = gameObject;
 
-            Transform = new TransformWrapper(gameObject.transform);
+            Components = new ComponentContainer(gameObject);
         }
     }
 }

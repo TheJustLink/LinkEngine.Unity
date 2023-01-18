@@ -2,6 +2,7 @@
 
 using LinkEngine.Components;
 using LinkEngine.Unity.Extensions;
+using LinkEngine.Unity.Objects;
 using LinkEngine.Unity.Threads;
 
 using Quaternion = System.Numerics.Quaternion;
@@ -10,7 +11,7 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace LinkEngine.Unity.Components
 {
-    class TransformWrapper : ITransform
+    class TransformWrapper : ObjectWrapper<Transform>, ITransform
     {
         public bool HasParent => Parent != null;
 
@@ -85,15 +86,13 @@ namespace LinkEngine.Unity.Components
         public Vector3 LocalPosition { get; set; }
         public Quaternion LocalRotation { get; set; }
         public Vector3 LocalScale { get; set; }
-
-        private readonly Transform _transform;
+        
         private bool _parentChanged;
         private ITransform _parent;
 
         public TransformWrapper(Transform transform)
+            : base(transform)
         {
-            _transform = transform;
-            
             if (transform.parent != null)
                 Parent = new TransformWrapper(transform.parent);
             
@@ -106,12 +105,14 @@ namespace LinkEngine.Unity.Components
                 if (_parentChanged)
                 {
                     _parentChanged = false;
-                    transform.SetParent((Parent as TransformWrapper)?._transform, false);
+                    transform.SetParent((Parent as TransformWrapper)?.NativeObject, false);
                 }
 
                 transform.SetLocalPositionAndRotation(LocalPosition.ToUnity(), LocalRotation.ToUnity());
                 transform.localScale = LocalScale.ToUnity();
             });
         }
+
+        public void Destroy() => UnityThreadDispatcher.Instance.InvokeAsync(() => Object.Destroy(NativeObject));
     }
 }

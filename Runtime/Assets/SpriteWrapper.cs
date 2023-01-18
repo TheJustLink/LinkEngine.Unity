@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
 using LinkEngine.Assets;
+using LinkEngine.Unity.Objects;
 
 namespace LinkEngine.Unity.Assets
 {
-    class SpriteWrapper : AssetWrapper<Sprite>, ISprite
+    class SpriteWrapper : ObjectWrapper<Sprite>, ISprite
     {
         public bool Packed => NativeObject.packed;
         
