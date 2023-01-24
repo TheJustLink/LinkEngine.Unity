@@ -22,23 +22,10 @@ namespace LinkEngine.Unity.Components
         {
             var type = typeof(T);
 
-            if (_components.TryGetValue(type, out var result))
-                return result as T;
-            
-            var wrapperEntry = WrapperProvider.GetWrapperEntry<T>();
+            if (TryGet(out T component))
+                return component;
 
-            var component = await UnityThreadDispatcher.Instance.InvokeAsync(() =>
-            {
-                Component nativeComponent;
-
-                if (_gameObject.TryGetComponent(wrapperEntry.NativeType, out var result))
-                    nativeComponent = result;
-                else
-                    nativeComponent = _gameObject.AddComponent(wrapperEntry.NativeType);
-
-                return wrapperEntry.CreateWrapper<T>(nativeComponent);
-            }).ConfigureAwait(false);
-            
+            component = await CreateWrappedNativeComponentAsync<T>().ConfigureAwait(false);
             _components.Add(type, component);
 
             return component;
@@ -47,12 +34,12 @@ namespace LinkEngine.Unity.Components
         public void Remove<T>() where T : class, IComponent
         {
             var type = typeof(T);
-
-            if (_components.TryGetValue(type, out var component) == false)
+            
+            if (TryGet(out T component) == false)
                 return;
 
             _components.Remove(type);
-            component.Destroy();
+            (component as IComponentWrapper)!.Destroy();
         }
         
         public T Get<T>() where T : class, IComponent
@@ -76,6 +63,26 @@ namespace LinkEngine.Unity.Components
         public bool Has<T>() where T : class, IComponent
         {
             return _components.ContainsKey(typeof(T));
+        }
+
+        private async Task<TManaged> CreateWrappedNativeComponentAsync<TManaged>() where TManaged : class
+        {
+            var wrapperEntry = WrapperProvider.GetWrapperEntry<TManaged>();
+            var component = await UnityThreadDispatcher.Instance.InvokeAsync(() =>
+                CreateWrappedNativeComponent<TManaged>(wrapperEntry)
+            ).ConfigureAwait(false);
+
+            return component;
+        }
+        private TManaged CreateWrappedNativeComponent<TManaged>(WrapperEntry wrapperEntry) where TManaged : class
+        {
+            Component nativeComponent;
+
+            if (_gameObject.TryGetComponent(wrapperEntry.NativeType, out var result))
+                nativeComponent = result;
+            else nativeComponent = _gameObject.AddComponent(wrapperEntry.NativeType);
+
+            return wrapperEntry.CreateWrapper<TManaged>(nativeComponent);
         }
     }
 }

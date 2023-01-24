@@ -7,15 +7,20 @@ namespace LinkEngine.Unity.Objects
 {
     class ObjectWrapper
     {
-        public ObjectWrapper(Object nativeObject) { }
+        protected ObjectWrapper(Object? nativeObject) { }
     }
-
-    class ObjectWrapper<T> : ObjectWrapper, IEquatable<ObjectWrapper<T>>
-        where T : Object
+    
+    class ObjectWrapper<TNative> : ObjectWrapper, IEquatable<ObjectWrapper<TNative>>
+        where TNative : Object
     {
-        protected readonly T NativeObject;
-        
-        public ObjectWrapper(Object nativeObject) : base(nativeObject) => NativeObject = nativeObject as T;
+        protected static TManaged Wrap<TManaged>(Object @object) where TManaged : class =>
+            WrapperProvider.CreateWrapper<TManaged>(@object);
+        protected static TNative Unwrap<TManaged>(TManaged @object) =>
+            (@object as ObjectWrapper<TNative>)!.NativeObject;
+
+        public readonly TNative NativeObject;
+
+        protected ObjectWrapper(Object? nativeObject) : base(nativeObject) => NativeObject = (nativeObject as TNative)!;
 
         public override bool Equals(object obj)
         {
@@ -23,18 +28,18 @@ namespace LinkEngine.Unity.Objects
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
 
-            return Equals((ObjectWrapper<T>)obj);
+            return Equals((ObjectWrapper<TNative>)obj);
         }
-        public bool Equals(ObjectWrapper<T> other)
+        public bool Equals(ObjectWrapper<TNative> other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return EqualityComparer<T>.Default.Equals(NativeObject, other.NativeObject);
+            return EqualityComparer<TNative>.Default.Equals(NativeObject, other.NativeObject);
         }
         public override int GetHashCode()
         {
-            return EqualityComparer<T>.Default.GetHashCode(NativeObject);
+            return EqualityComparer<TNative>.Default.GetHashCode(NativeObject);
         }
     }
 }

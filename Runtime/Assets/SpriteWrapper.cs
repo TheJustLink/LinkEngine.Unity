@@ -9,6 +9,6 @@ namespace LinkEngine.Unity.Assets
     {
         public bool Packed => NativeObject.packed;
         
-        public SpriteWrapper(Object nativeObject) : base(nativeObject) { }
+        public SpriteWrapper(Object? nativeObject) : base(nativeObject) { }
     }
 }

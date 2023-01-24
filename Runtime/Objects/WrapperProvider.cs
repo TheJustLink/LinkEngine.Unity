@@ -18,7 +18,8 @@ namespace LinkEngine.Unity.Objects
 
             // Components
             { typeof(ITransform2D), typeof(TransformWrapper) },
-            { typeof(ITransform), typeof(TransformWrapper) }
+            { typeof(ITransform), typeof(TransformWrapper) },
+            { typeof(ISpriteRenderer), typeof(SpriteRendererWrapper) }
         };
         private static readonly Dictionary<System.Type, WrapperEntry> s_wrapperEntries = new();
 

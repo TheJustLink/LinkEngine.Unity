@@ -6,7 +6,9 @@ using LinkEngine.Unity.Engines;
 using LinkEngine.Unity.Threads;
 using LinkEngine.Unity.GameObjects;
 using LinkEngine.Unity.Assets;
+using LinkEngine.Unity.IO.Mouse;
 
+using ThreadPriority = System.Threading.ThreadPriority;
 using Input = LinkEngine.Unity.IO.Input;
 using Logger = LinkEngine.Unity.Logs.Logger;
 
@@ -27,6 +29,7 @@ namespace LinkEngine.Unity
 
             s_engine = new Engine(
                 new Logger(),
+                new Mouse(),
                 new GameObjectFactory(),
                 new Input(),
                 new AssetProvider()
@@ -40,12 +43,13 @@ namespace LinkEngine.Unity
         {
             s_appThread = new(() => LinkEngine.EntryPoint.Enter(engine));
             s_appThread.IsBackground = true;
+            s_appThread.Priority = ThreadPriority.Highest;
             s_appThread.Start();
         }
 
         private static void OnStop()
         {
-            UnityEngine.Application.quitting -= OnStop;
+            Application.quitting -= OnStop;
             
             if (s_appThread.IsAlive)
             {

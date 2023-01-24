@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
 using LinkEngine.Components;
+using LinkEngine.Math;
 using LinkEngine.Unity.Extensions;
-using LinkEngine.Unity.Objects;
 using LinkEngine.Unity.Threads;
 
 using Quaternion = System.Numerics.Quaternion;
@@ -11,11 +11,16 @@ using Vector3 = System.Numerics.Vector3;
 
 namespace LinkEngine.Unity.Components
 {
-    class TransformWrapper : ObjectWrapper<Transform>, ITransform
+    class TransformWrapper : ComponentWrapper<Transform>, ITransform
     {
         public bool HasParent => Parent != null;
-
-        public ITransform Parent
+        
+        ITransform2D? ITransform2D.Parent
+        {
+            get => Parent;
+            set => Parent = value as ITransform;
+        }
+        public ITransform? Parent
         {
             get => _parent;
             set
@@ -40,11 +45,17 @@ namespace LinkEngine.Unity.Components
             get => Position.To2D();
             set => Position = value.To3D();
         }
-        float ITransform2D.Rotation
+        float ITransform2D.RotationInRadians
         {
-            get => Rotation.To2D();
-            set => Rotation = value.To3DRotation();
+            get => Rotation.ToEulerInRadians().Z;
+            set => Rotation = value.ToQuaternionFromZAxisInRadians();
         }
+        float ITransform2D.RotationInDegrees
+        {
+            get => Rotation.ToEulerInDegrees().Z;
+            set => Rotation = value.ToQuaternionFromZAxisInDegrees();
+        }
+
         Vector2 ITransform2D.Scale
         {
             get => Scale.To2D();
@@ -72,10 +83,15 @@ namespace LinkEngine.Unity.Components
             get => LocalPosition.To2D();
             set => LocalPosition = value.To3D();
         }
-        float ITransform2D.LocalRotation
+        float ITransform2D.LocalRotationInRadians
         {
-            get => LocalRotation.To2D();
-            set => LocalRotation = value.To3DRotation();
+            get => LocalRotation.ToEulerInRadians().Z;
+            set => LocalRotation = value.ToQuaternionFromZAxisInRadians();
+        }
+        float ITransform2D.LocalRotationInDegrees
+        {
+            get => LocalRotation.ToEulerInDegrees().Z;
+            set => LocalRotation = value.ToQuaternionFromZAxisInDegrees();
         }
         Vector2 ITransform2D.LocalScale
         {
@@ -88,31 +104,36 @@ namespace LinkEngine.Unity.Components
         public Vector3 LocalScale { get; set; }
         
         private bool _parentChanged;
-        private ITransform _parent;
+        private ITransform? _parent;
 
-        public TransformWrapper(Transform transform)
-            : base(transform)
+        public TransformWrapper(Transform nativeObject)
+            : base(nativeObject)
         {
-            if (transform.parent != null)
-                Parent = new TransformWrapper(transform.parent);
+            if (NativeObject.parent != null)
+                Parent = new TransformWrapper(NativeObject.parent);
             
-            LocalPosition = transform.localPosition.ToSystem();
-            LocalRotation = transform.localRotation.ToSystem();
-            LocalScale = transform.localScale.ToSystem();
+            LocalPosition = NativeObject.localPosition.ToSystem();
+            LocalRotation = NativeObject.localRotation.ToSystem();
+            LocalScale = NativeObject.localScale.ToSystem();
 
-            UnityThreadDispatcher.Instance.AddSynchronizationJob(() =>
-            {
-                if (_parentChanged)
-                {
-                    _parentChanged = false;
-                    transform.SetParent((Parent as TransformWrapper)?.NativeObject, false);
-                }
-
-                transform.SetLocalPositionAndRotation(LocalPosition.ToUnity(), LocalRotation.ToUnity());
-                transform.localScale = LocalScale.ToUnity();
-            });
+            Enable();
         }
+        
+        protected override void InternalEnable() => UnityThreadDispatcher.Instance.AddSynchronizationJob(SyncWithNative);
+        protected override void InternalDisable() => UnityThreadDispatcher.Instance.RemoveSynchronizationJob(SyncWithNative);
 
-        public void Destroy() => UnityThreadDispatcher.Instance.InvokeAsync(() => Object.Destroy(NativeObject));
+        public override void Destroy() => Disable();
+
+        private void SyncWithNative()
+        {
+            if (_parentChanged)
+            {
+                _parentChanged = false;
+                NativeObject.SetParent((Parent as TransformWrapper)?.NativeObject, false);
+            }
+
+            NativeObject.SetLocalPositionAndRotation(LocalPosition.ToUnity(), LocalRotation.ToUnity());
+            NativeObject.localScale = LocalScale.ToUnity();
+        }
     }
 }

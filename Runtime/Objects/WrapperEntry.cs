@@ -13,7 +13,7 @@ namespace LinkEngine.Unity.Objects
             WrapperType = wrapperType;
 
             var baseType = wrapperType.BaseType;
-            if (baseType == null || baseType.IsGenericType == false || baseType.GetGenericTypeDefinition() != typeof(ObjectWrapper<>))
+            if (baseType == null || baseType.IsGenericType == false || baseType.IsAssignableFrom(typeof(ObjectWrapper<>)))
                 throw new System.NotImplementedException($"Type {wrapperType} does not have base type of type {typeof(ObjectWrapper<>)}");
 
             NativeType = baseType.GetGenericArguments()[0];
