@@ -1,6 +1,5 @@
-﻿using System.Numerics;
-
-using LinkEngine.IO;
+﻿using LinkEngine.IO;
+using LinkEngine.Math;
 using LinkEngine.Unity.Threads;
 
 namespace LinkEngine.Unity.IO

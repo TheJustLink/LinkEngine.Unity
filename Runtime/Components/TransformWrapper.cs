@@ -5,9 +5,9 @@ using LinkEngine.Math;
 using LinkEngine.Unity.Extensions;
 using LinkEngine.Unity.Threads;
 
-using Quaternion = System.Numerics.Quaternion;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
+using Vector2 = LinkEngine.Math.Vector2;
+using Vector3 = LinkEngine.Math.Vector3;
+using Quaternion = LinkEngine.Math.Quaternion;
 
 namespace LinkEngine.Unity.Components
 {
@@ -42,24 +42,24 @@ namespace LinkEngine.Unity.Components
 
         Vector2 ITransform2D.Position
         {
-            get => Position.To2D();
-            set => Position = value.To3D();
+            get => Position;
+            set => Position = Position.WithXY(value);
         }
         float ITransform2D.RotationInRadians
         {
-            get => Rotation.ToEulerInRadians().Z;
-            set => Rotation = value.ToQuaternionFromZAxisInRadians();
+            get => Rotation.EulerInRadians.Z;
+            set => Rotation = Rotation.WithEulerZInRadians(value);
         }
         float ITransform2D.RotationInDegrees
         {
-            get => Rotation.ToEulerInDegrees().Z;
-            set => Rotation = value.ToQuaternionFromZAxisInDegrees();
+            get => Rotation.EulerInDegrees.Z;
+            set => Rotation = Rotation.WithEulerZInDegrees(value);
         }
 
         Vector2 ITransform2D.Scale
         {
-            get => Scale.To2D();
-            set => Scale = value.To3D();
+            get => Scale;
+            set => Scale = Scale.WithXY(value);
         }
 
         public Vector3 Position
@@ -70,7 +70,7 @@ namespace LinkEngine.Unity.Components
         public Quaternion Rotation
         {
             get => Parent == null ? LocalRotation : LocalRotation * Parent.Rotation;
-            set => LocalRotation = Parent == null ? value : Quaternion.Inverse(Parent.Rotation) * value;
+            set => LocalRotation = Parent == null ? value : Parent.Rotation.Inversed * value;
         }
         public Vector3 Scale
         {
@@ -80,23 +80,23 @@ namespace LinkEngine.Unity.Components
 
         Vector2 ITransform2D.LocalPosition
         {
-            get => LocalPosition.To2D();
-            set => LocalPosition = value.To3D();
+            get => LocalPosition;
+            set => LocalPosition = LocalPosition.WithXY(value);
         }
         float ITransform2D.LocalRotationInRadians
         {
-            get => LocalRotation.ToEulerInRadians().Z;
-            set => LocalRotation = value.ToQuaternionFromZAxisInRadians();
+            get => LocalRotation.EulerInRadians.Z;
+            set => LocalRotation = LocalRotation.WithEulerZInRadians(value);
         }
         float ITransform2D.LocalRotationInDegrees
         {
-            get => LocalRotation.ToEulerInDegrees().Z;
-            set => LocalRotation = value.ToQuaternionFromZAxisInDegrees();
+            get => LocalRotation.EulerInDegrees.Z;
+            set => LocalRotation = LocalRotation.WithEulerZInDegrees(value);
         }
         Vector2 ITransform2D.LocalScale
         {
-            get => LocalScale.To2D();
-            set => LocalScale = value.To3DScale();
+            get => LocalScale;
+            set => LocalScale = LocalScale.WithXY(value);
         }
 
         public Vector3 LocalPosition { get; set; }
@@ -112,9 +112,9 @@ namespace LinkEngine.Unity.Components
             if (NativeObject.parent != null)
                 Parent = new TransformWrapper(NativeObject.parent);
             
-            LocalPosition = NativeObject.localPosition.ToSystem();
-            LocalRotation = NativeObject.localRotation.ToSystem();
-            LocalScale = NativeObject.localScale.ToSystem();
+            LocalPosition = NativeObject.localPosition.ToLinkEngine();
+            LocalRotation = NativeObject.localRotation.ToLinkEngine();
+            LocalScale = NativeObject.localScale.ToLinkEngine();
 
             Enable();
         }

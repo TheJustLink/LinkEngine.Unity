@@ -1,10 +1,10 @@
-﻿using LinkEngine.IO.Mouse;
+﻿using UnityEngine;
+
+using LinkEngine.IO.Mouse;
 using LinkEngine.Unity.Extensions;
 using LinkEngine.Unity.Threads;
 
-using UnityEngine;
-
-using Vector2 = System.Numerics.Vector2;
+using Vector2 = LinkEngine.Math.Vector2;
 
 namespace LinkEngine.Unity.IO.Mouse
 {
@@ -60,8 +60,8 @@ namespace LinkEngine.Unity.IO.Mouse
             var mousePositionInScreen = UnityEngine.Input.mousePosition;
             var mousePositionInWorld = _camera.ScreenToWorldPoint(mousePositionInScreen);
 
-            PositionInScreen = mousePositionInScreen.ToVector2().ToSystem();
-            PositionInWorld = mousePositionInWorld.ToVector2().ToSystem();
+            PositionInScreen = mousePositionInScreen.ToVector2().ToLinkEngine();
+            PositionInWorld = mousePositionInWorld.ToVector2().ToLinkEngine();
 
             for (var i = 0; i < AllButtons.Length; i++)
                 (AllButtons[i] as MouseButton).SyncWithNative();
